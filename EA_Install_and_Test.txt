@@ -1,0 +1,38 @@
+# Velocity Gold Bot V1 — MT5 Expert Advisor
+
+## What it does
+- Trades the chart symbol, intended for XAUUSD (including broker suffixes such as XAUUSD.a).
+- Checks signals on a configurable timeframe (default M15).
+- Entry: 20/50 EMA crossover plus RSI confirmation.
+  - BUY: fast EMA crosses above slow EMA and RSI is 52–70.
+  - SELL: fast EMA crosses below slow EMA and RSI is 30–48.
+- Stop-loss: 1.5 × ATR, respecting broker minimum stop distance.
+- Take-profit: 2 × the stop distance.
+- Position sizing: estimates risk at 0.5% of equity and rounds volume down.
+- One EA position per symbol and magic number.
+- Optional close on opposite signal.
+- Daily equity-loss lock: default 2%; closes this EA's positions and blocks new trades for the rest of the broker-server day.
+- `DemoOnly=true` prevents initialization on a real account.
+
+## Important limitations
+- No strategy guarantees profits. Losses, slippage, spread widening, gaps, and rejected orders are possible.
+- The daily baseline is captured the first time the EA runs on each broker-server date; if the terminal/VPS was offline at midnight, this is not a true midnight equity snapshot.
+- This EA has not been compiled or backtested in your broker's MT5 environment. Compile in MetaEditor and resolve any broker/build-specific issues before testing.
+- `MaxSpreadPoints` is broker-specific. Check XAUUSD's normal spread and point format before changing it.
+- Position risk is an estimate based on `OrderCalcProfit`; commissions and slippage can increase actual loss.
+- The EA uses closed-bar signals, so it does not react to an intrabar crossover.
+- This version does not include news-calendar filtering or a guarantee that stop orders fill at their exact requested price.
+
+## Install and test
+1. Download and unzip the package on a Windows PC or VPS with MT5 installed.
+2. In MT5, choose **File → Open Data Folder**.
+3. Open `MQL5/Experts/` and copy `Velocity_Gold_Bot_V1.mq5` there.
+4. Open MetaEditor from MT5, find the EA under Experts, and compile it (F7).
+5. Return to MT5, open your broker's XAUUSD chart, choose M15, and attach the EA.
+6. Keep `DemoOnly=true`. Turn on Algo Trading and allow algorithmic trading in the EA settings.
+7. Open Strategy Tester (Ctrl+R), select this EA and the broker's exact XAUUSD symbol, then run historical tests with realistic spread/commission settings.
+8. Run on a demo account for multiple market conditions. Inspect net profit after costs, maximum drawdown, profit factor, trade count, and out-of-sample results.
+9. Do not switch `DemoOnly` off or use a live account until you have independently reviewed the results and risk.
+
+## Android-only workflow
+The Android MT5 app cannot host a custom MQL5 Expert Advisor directly. Use a Windows PC or compatible VPS to run the EA continuously; use Android MT5 to monitor the account. Never share your MT5 password with anyone.
